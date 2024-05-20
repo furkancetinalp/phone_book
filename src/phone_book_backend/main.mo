@@ -38,9 +38,6 @@ actor {
     //   return ("Phone number is not in the correct format!");
 
     // };
-    if( checkIfNumberAlreadyExists(contact.phone)){
-      return ("Phone number already exists in your contacts");
-    };
     if ( not validatePhoneNumberNumeric(contact.phone)){
             return ("Phone number must only contain numeric numbers");
     };
@@ -50,6 +47,9 @@ actor {
     if (contact.isBlocked == true and contact.isFavorite == true) {
             return ("A contact cannot be both marked as a favorite and blocked. ");
         };
+    if( checkIfNumberAlreadyExists(contact.phone)){
+      return ("Phone number already exists in your contacts");
+    };
 
     let contactId = next;
     next += 1;
