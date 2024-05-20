@@ -3,6 +3,9 @@ import Text "mo:base/Text";
 import Nat32 "mo:base/Nat32";
 import Bool "mo:base/Bool";
 import Option "mo:base/Option";
+import Buffer "mo:base/Buffer";
+import Debug "mo:base/Debug";
+import Char "mo:base/Char";
 
 
 actor {
@@ -30,7 +33,18 @@ actor {
    private stable var contacts : Trie.Trie<ContactId, Contact> = Trie.empty();
 
    public func addContact(contact : Contact) : async Text {
-    if (not validatePhoneNumber(contact.phone)) {
+    //alternatif olarak gösterebileceğimiz bir metot, tüm validasyonları bünyesine alan ve addContact'a özgü bir validasyon metodu
+    // if ( addContactValidator(contact.phone) == false){
+    //   return ("Phone number is not in the correct format!");
+
+    // };
+    if( checkIfNumberAlreadyExists(contact.phone)){
+      return ("Phone number already exists in your contacts");
+    };
+    if ( not validatePhoneNumberNumeric(contact.phone)){
+            return ("Phone number must only contain numeric numbers");
+    };
+    if (not validatePhoneNumberSize(contact.phone)) {
             return ("Phone number must be a 10-digit");
         };
     if (contact.isBlocked == true and contact.isFavorite == true) {
@@ -63,6 +77,9 @@ actor {
   };
 
   public func updateContact(contactId : ContactId, contact : Contact) : async Bool {
+    if(updateContactValidator(contact.phone) ==false){
+      return false;
+    };
     let result = Trie.find(contacts, key(contactId), Nat32.equal);
     let exists = Option.isSome(result);
     if (exists) {
@@ -85,6 +102,18 @@ actor {
   );
   };
 
+  //buffer kullanımı için bir örnek
+  // public func getAllContacts(): async [Contact]{
+  //   let response = Buffer.Buffer<Contact>(0); 
+  //   // var response : [Contact] = [];
+  //   let iter = Trie.iter(contacts);
+
+  //   for ((k, v) in iter) {
+  //     response.add(v);
+  //   };
+  //   return Buffer.toArray(response); 
+  // };
+  
   public  func showContacts(): async Text {
     var allContacts =  await getContacts();
     var output: Text = "\n__ALL-CONTACTS_____";
@@ -155,7 +184,7 @@ actor {
 
   public func getContactByPhone(searchKey: Text) : async Text {
 
-  let filteredContact: Trie.Trie<ContactId, Contact> = Trie.filter<ContactId, Contact>(contacts, func (key: ContactId, contact: Contact)  { contact.name == searchKey});
+  let filteredContact: Trie.Trie<ContactId, Contact> = Trie.filter<ContactId, Contact>(contacts, func (key: ContactId, contact: Contact)  { contact.phone == searchKey});
      var size = Trie.size(filteredContact);
      if (size == 0) {
       return ("The phone you are looking for is not in the Contact Book");
@@ -180,13 +209,47 @@ actor {
     return { hash = x; key = x };
   };
 
-
-  private func validatePhoneNumber(phone: Text) : Bool {
+  private func validatePhoneNumberSize(phone: Text) : Bool {
         if (phone.size() != 10) {
             return false;
         };
         return true;
     };
 
+  private func validatePhoneNumberNumeric(phone:Text) :  Bool{
+    for (letter in phone.chars()){
+      if( Char.isDigit(letter) == false){
+        return false;
+      };
+    };
+    return true;
+  };
+
+
+  private func checkIfNumberAlreadyExists(phone:Text) : Bool {
+    let filteredContact: Trie.Trie<ContactId, Contact> = Trie.filter<ContactId, Contact>(contacts, func (key: ContactId, contact: Contact)  { contact.phone == phone});
+     if (Trie.size(filteredContact) == 0) {
+      return false;
+     }
+     else{
+      return true;
+     }
+  };
    
+
+
+  private func addContactValidator(phone:Text) :Bool{
+    if( validatePhoneNumberSize(phone) == false or  validatePhoneNumberNumeric(phone:Text) == false  or  checkIfNumberAlreadyExists(phone:Text) == true){
+      return false;
+    };
+    return true;
+
+  };
+
+  private func updateContactValidator(phone:Text) : Bool{
+    if( validatePhoneNumberSize(phone) == false or  validatePhoneNumberNumeric(phone:Text) == false){
+      return false;
+    };
+    return true;
+  }
 }
