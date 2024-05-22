@@ -105,7 +105,7 @@ Yani actor building block adı verilen tasarım bloğunu temsil eder
 Actor, canisterın programlama kısmını temsil eden, içinde birden fazla değişken, fonksiyon barındırabilen bir yapıdır.
 
 actor {
-    var message : Text = "Hello Motoko Bootcamp!";
+    var message : Text = "Hello Motoko!";
 
     public func changeMessage(t : Text) : async () {
         message := t;
