@@ -87,6 +87,7 @@ Dezavantajları
 Low level adı verilen ve makine diline yakın bir dildir. Makine diline yaklaştıkça öğrenmek ve bu tür dillerde kompleks uygulamalar geliştirmek
 zorlaşır. Büyük uygulamalar geliştirmek hem daha büyük zahmete sebep olur hem de projenin ölçeklenmesini güçleştirir
 
+EXPLAIN LOW-LEVEL HIGH-LEVEL PROGRAMMING LANGUAGES
 
 Motoko Programlala Dili
 Yukarıdaki bu sorunları çözmek için Dfinity tarafından Motoko dili geliştirilmiştir.
