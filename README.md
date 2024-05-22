@@ -95,7 +95,34 @@ Bir high level yani yüksek seviyeli bir dildir
 
 
 
+ACTOR MODEL NEDİR?
 
+Aktör, Motokoda bir canisterın nasıl temsil edildiği ve soyutlandığıdır
+Aynı anda birden çok görevi, eylemi yerine getirecek bir proje yazmak için bir yol olarak karşımıza çıkar.
+Yani actor building block adı verilen tasarım bloğunu temsil eder
+
+Actor, canisterın programlama kısmını temsil eden, içinde birden fazla değişken, fonksiyon barındırabilen bir yapıdır.
+
+actor {
+    var message : Text = "Hello Motoko Bootcamp!";
+
+    public func changeMessage(t : Text) : async () {
+        message := t;
+    };
+
+    public query func readMessage() : async Text {
+        return message;
+    };
+};
+
+Update vs Query
+Update, canisterın state'ini ' yani durmunu değiştirmeyi sağlayan bir bildirim yöntemidir
+Posting on a social media,
+Seding a message on a messaging application
+Buying a NFT
+
+Query ise canisterın durumunu değiştirmez, oradan veri almayı sağlar
+Reading an article
 
 
 
